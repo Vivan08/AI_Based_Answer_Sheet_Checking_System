@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnswerCheck AI — Automated Answer Sheet Checking</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="bg-slider">
+  <div class="bg-slide active" style="background-image:url('{{ url_for('static', filename='education-bg-1.jpg') }}')"></div>
+  <div class="bg-slide" style="background-image:url('{{ url_for('static', filename='education-bg-2.jpg') }}')"></div>
+  <div class="bg-slide" style="background-image:url('{{ url_for('static', filename='education-bg-3.jpg') }}')"></div>
+</div>
+<div class="bg-overlay"></div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">⌁</div>
+      <div><strong>AnswerCheck <i>AI</i></strong><small>Smart Evaluation • Better Learning</small></div>
+    </div>
+    <nav>
+      <a class="active" href="#dashboard"><span>⌂</span> Dashboard</a>
+      <a href="#evaluate"><span>▣</span> Evaluate Answer Sheet</a>
+      <a href="#history"><span>◴</span> History</a>
+      <a href="#students"><span>♙</span> Students</a>
+      <a href="#reports"><span>▥</span> Reports</a>
+      <a href="#settings"><span>⚙</span> Settings</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sdg-card"><b>SDG 4</b><strong>Quality Education</strong><p>Faster assessment, consistent grading and better feedback.</p></div>
+      <div class="teacher"><span class="avatar">T</span><span><b>Teacher</b><small>Administrator</small></span><span class="dots">⋮</span></div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="hero" id="dashboard">
+      <div>
+        <div class="eyebrow">AUTOMATED ASSESSMENT PLATFORM</div>
+        <h1>Automated Answer<br>Sheet Checking <em>System</em></h1>
+        <div class="hero-pills"><span>Digitize</span><b>•</b><span>Evaluate</span><b>•</b><span>Provide Instant Feedback</span></div>
+        <p>A Python-based system that uses OCR and NLP to automatically evaluate subjective answer sheets, reduce repetitive work, and help educators deliver consistent feedback.</p>
+      </div>
+      <div class="ready"><span></span> System Ready</div>
+    </header>
+
+    <section class="stats">
+      <div class="stat-card"><div class="stat-icon blue">▣</div><div><small>Total Evaluations</small><strong id="evalCount">0</strong><p>Recent processed responses</p></div></div>
+      <div class="stat-card"><div class="stat-icon green">♙</div><div><small>Total Students</small><strong id="studentCount">0</strong><p>Students evaluated</p></div></div>
+      <div class="stat-card"><div class="stat-icon purple">◎</div><div><small>Average Accuracy</small><strong id="avgScore">—</strong><p>Based on recent results</p></div></div>
+      <div class="stat-card"><div class="stat-icon orange">☆</div><div><small>Total Marks Awarded</small><strong id="totalMarks">0</strong><p>Across evaluations</p></div></div>
+    </section>
+
+    <section class="main-grid">
+      <div class="glass-card evaluator" id="evaluate">
+        <div class="card-title"><div class="title-icon">▣</div><div><h2>Evaluate Answer Sheet</h2><p>Enter the details below to evaluate a student's answer.</p></div></div>
+        <form id="gradingForm">
+          <div class="two-col">
+            <label>Student Name<input name="student_name" placeholder="Enter student name"></label>
+            <label>Question<input name="question" placeholder="Enter question"></label>
+          </div>
+          <div class="two-col">
+            <label>Student Answer<textarea name="answer" rows="6" placeholder="Enter student's answer here..."></textarea></label>
+            <label>Master Answer<textarea name="answer_key" rows="6" placeholder="Enter master answer here..."></textarea></label>
+          </div>
+          <div class="eval-row">
+            <div class="auto"><span class="toggle on"></span><div><b>Auto Evaluate</b><small>Use AI + NLP to check and calculate marks</small></div></div>
+            <label class="marks-label">Max marks<input name="max_score" type="number" min="1" value="10"></label>
+            <button class="primary" type="submit">✦ Evaluate Answer</button>
+            <button class="secondary" type="button" id="demoBtn">Load Demo</button>
+          </div>
+        </form>
+        <div class="tech-strip"><span>♢</span><b>Supported Technologies</b><i>Tesseract OCR</i><i>OpenCV</i><i>NLTK</i><i>Scikit-learn</i></div>
+      </div>
+
+      <div class="glass-card result-card">
+        <div class="card-title"><div class="title-icon purple-icon">◎</div><div><h2>Evaluation Result</h2><p>Automated scoring overview</p></div></div>
+        <div id="emptyState" class="result-empty"><div>◎</div><h3>No evaluation yet</h3><p>Submit an answer to view similarity, marks and feedback.</p></div>
+        <div id="resultState" class="hidden">
+          <div class="result-top">
+            <div class="ring"><span id="scorePct">0%</span><small>Similarity</small></div>
+            <div class="marks-box"><small>Marks Obtained</small><strong id="marks">0 / 10</strong><span id="quality">Waiting</span><p id="resultMessage">Evaluation completed.</p></div>
+          </div>
+          <h3 class="highlights-title">Key Highlights</h3>
+          <ul class="highlights"><li>Relevant keywords found</li><li>Text similarity calculated</li><li>Response compared with master key</li><li>Manual review recommended for edge cases</li></ul>
+          <div class="feedback"><b>Automated Feedback</b><p id="feedbackText"></p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="glass-card history-card" id="history">
+      <div class="history-head"><div><h2>Recent Evaluations</h2><p>Latest answer-sheet assessment activity</p></div><button class="secondary small" id="refreshBtn">Refresh ↻</button></div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>Student Name</th><th>Question</th><th>Marks</th><th>Similarity</th><th>Status</th><th>Date</th></tr></thead><tbody id="historyBody"><tr><td colspan="7" class="muted">No evaluations yet.</td></tr></tbody></table></div>
+    </section>
+
+    <section class="bottom-grid">
+      <div class="glass-card info-card" id="students"><span class="eyebrow">PROJECT OVERVIEW</span><h2>Built for faster, consistent academic assessment.</h2><p>Digitize scanned responses with OCR, compare answers against a teacher-approved rubric, calculate marks, and keep a transparent evaluation history.</p></div>
+      <div class="glass-card info-card" id="reports"><span class="eyebrow">TECHNOLOGY STACK</span><div class="stack"><span>Python</span><span>Flask</span><span>Tesseract OCR</span><span>OpenCV</span><span>NLTK</span><span>Scikit-learn</span><span>SQLite</span></div></div>
+    </section>
+
+    <footer>⌁ &nbsp; 2026 AnswerCheck AI &nbsp;|&nbsp; Built for Education &nbsp;|&nbsp; SDG 4 — Quality Education</footer>
+  </main>
+</div>
+
+<script>
+const form = document.getElementById("gradingForm");
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = form.querySelector(".primary");
+  btn.disabled = true; btn.textContent = "Evaluating…";
+  try {
+    const res = await fetch("/evaluate", {method:"POST", body:new FormData(form)});
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Evaluation failed");
+    document.getElementById("emptyState").classList.add("hidden");
+    document.getElementById("resultState").classList.remove("hidden");
+    document.getElementById("scorePct").textContent = data.similarity + "%";
+    document.getElementById("marks").textContent = `${data.score} / ${data.max_score}`;
+    document.getElementById("resultMessage").textContent = `${data.student} • ${data.percentage}% score`;
+    const quality = document.getElementById("quality");
+    quality.textContent = data.percentage >= 80 ? "Good" : data.percentage >= 50 ? "Needs Review" : "Low Match";
+    quality.className = data.percentage >= 80 ? "good" : "review";
+    document.getElementById("feedbackText").textContent =
+      data.percentage >= 80 ? "Strong alignment with the master answer. Check completeness before finalizing." :
+      data.percentage >= 50 ? "Moderate alignment. Review missing concepts and the context of the response." :
+      "Low alignment. Manual review is recommended because simple text similarity cannot capture every valid explanation.";
+    loadHistory();
+  } catch(err) { alert(err.message); }
+  finally { btn.disabled = false; btn.textContent = "✦ Evaluate Answer"; }
+});
+
+document.getElementById("demoBtn").onclick = () => {
+  form.student_name.value = "Aarav Sharma";
+  form.question.value = "Explain the role of photosynthesis in plants.";
+  form.answer.value = "Photosynthesis allows green plants to make food using sunlight, carbon dioxide and water. Chlorophyll absorbs light energy and oxygen is released.";
+  form.answer_key.value = "Photosynthesis is the process by which green plants produce glucose using sunlight, carbon dioxide and water. Chlorophyll captures light energy and oxygen is released as a by-product.";
+};
+
+async function loadHistory() {
+  const res = await fetch("/api/results"); const data = await res.json();
+  document.getElementById("evalCount").textContent = data.length;
+  document.getElementById("studentCount").textContent = new Set(data.map(x=>x.student_name)).size;
+  if (!data.length) return;
+  const avg = data.reduce((s,r)=>s+r.score/r.max_score*100,0)/data.length;
+  document.getElementById("avgScore").textContent = Math.round(avg)+"%";
+  document.getElementById("totalMarks").textContent = data.reduce((s,r)=>s+r.score,0).toFixed(1).replace(".0","");
+  document.getElementById("historyBody").innerHTML = data.map((r,i) => {
+    const pct=Math.round(r.score/r.max_score*100);
+    const status=pct>=80?"Good":pct>=50?"Needs Review":"Low Match";
+    return `<tr><td>${i+1}</td><td><b>${r.student_name}</b></td><td>${r.question||"—"}</td><td><b>${r.score}/${r.max_score}</b></td><td>${pct}%</td><td><span class="status-pill ${pct>=80?"good":pct>=50?"review":"low"}">${status}</span></td><td>${r.created_at}</td></tr>`;
+  }).join("");
+}
+document.getElementById("refreshBtn").onclick=loadHistory;
+loadHistory();
+
+let slide=0;
+const slides=document.querySelectorAll(".bg-slide");
+setInterval(()=>{slides[slide].classList.remove("active");slide=(slide+1)%slides.length;slides[slide].classList.add("active")},7000);
+</script>
+</body>
+</html>

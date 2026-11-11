@@ -1,0 +1,6 @@
+Flask>=3.0
+opencv-python>=4.9
+pytesseract>=0.3.13
+Pillow>=10.0
+nltk>=3.9
+scikit-learn>=1.5
